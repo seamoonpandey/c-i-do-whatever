@@ -7,6 +7,7 @@ void playGame(int numPlayers, int top) {
     int turn = 0;
     char player[numPlayers][20];
     int finalscore[numPlayers];
+    int consecutiveSixCount[numPlayers];
 
     // Seed the random number generator with the current time
     srand((unsigned int)time(NULL));
@@ -15,6 +16,7 @@ void playGame(int numPlayers, int top) {
         printf("Enter player %d's name: ", i + 1);
         scanf("%s", player[i]);
         finalscore[i] = 0;
+        consecutiveSixCount[i] = 0;
     }
 
     while (1) {
@@ -22,11 +24,20 @@ void playGame(int numPlayers, int top) {
         printf("%s got %d \n", player[turn % numPlayers], current);
         sleep(1);
 
-        finalscore[turn % numPlayers] += current;
-
         if (current == 6) {
-            printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % numPlayers]);
+            consecutiveSixCount[turn % numPlayers]++;
+            printf("Consecutive six count for %s: %d\n", player[turn % numPlayers], consecutiveSixCount[turn % numPlayers]);
+            
+            if (consecutiveSixCount[turn % numPlayers] == 3) {
+                printf("Oh no! %s rolled three consecutive 6s and gets a penalty of -6!\n", player[turn % numPlayers]);
+                finalscore[turn % numPlayers] -= 6;
+                consecutiveSixCount[turn % numPlayers] = 0; 
+            } else {
+                printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % numPlayers]);
+            }
         } else {
+            consecutiveSixCount[turn % numPlayers] = 0; 
+            finalscore[turn % numPlayers] += current;
             printf("%s's current score is now %d \n", player[turn % numPlayers], finalscore[turn % numPlayers]);
             printf("Loading next turn .... \n");
             sleep(1.5);
