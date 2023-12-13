@@ -3,48 +3,58 @@
 #include <unistd.h>
 #include <time.h>
 
-int main() {
+void playGame(int numPlayers, int top) {
     int turn = 0;
-    char player[3][20];
-    int finalscore[3] = {0};
-    int top;
-    printf("What shall be the final score\t");
-    scanf("%i",&top);
+    char player[numPlayers][20];
+    int finalscore[numPlayers];
 
     // Seed the random number generator with the current time
     srand((unsigned int)time(NULL));
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < numPlayers; i++) {
         printf("Enter player %d's name: ", i + 1);
         scanf("%s", player[i]);
+        finalscore[i] = 0;
     }
 
-    while (finalscore[0] < top && finalscore[1] < top && finalscore[2] < top) {
+    while (1) {
         int current = rand() % 6 + 1;
-        printf("%s got %d \n", player[turn % 3], current);
+        printf("%s got %d \n", player[turn % numPlayers], current);
         sleep(1);
 
-        finalscore[turn % 3] += current;
+        finalscore[turn % numPlayers] += current;
 
         if (current == 6) {
-            printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % 3]);
+            printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % numPlayers]);
         } else {
-            printf("%s's current score is now %d \n", player[turn % 3], finalscore[turn % 3]);
+            printf("%s's current score is now %d \n", player[turn % numPlayers], finalscore[turn % numPlayers]);
             printf("Loading next turn .... \n");
             sleep(1.5);
             turn += 1;
         }
 
-        printf("\n \n");
-    }
+        printf("\n");
 
-    if (finalscore[0] >= top) {
-        printf("%s is the winner", player[0]);
-    } else if (finalscore[1] >= top) {
-        printf("%s is the winner", player[1]);
-    } else {
-        printf("%s is the winner", player[2]);
+        // Check if any player has reached the final score
+        for (int i = 0; i < numPlayers; i++) {
+            if (finalscore[i] >= top) {
+                printf("%s is the winner with a score of %d!\n", player[i], finalscore[i]);
+                return;
+            }
+        }
     }
+}
+
+int main() {
+    int numPlayers, top;
+
+    printf("Enter the number of players: ");
+    scanf("%d", &numPlayers);
+
+    printf("What shall be the final score: ");
+    scanf("%d", &top);
+
+    playGame(numPlayers, top);
 
     return 0;
 }
