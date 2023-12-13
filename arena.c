@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 
+#define MAX_TURNS 50
 
 void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
     int turn = 0;
@@ -20,8 +21,9 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
         healthPoints[i] = initialHP;
     }
 
-    while (1) {
-        int attack = rand() % 6 + 1;
+    int turns = 0;
+    while (turns < MAX_TURNS) {
+        int attack = rand() % 7;
         printf("%s attacks with a damage of %d \n", player[turn % numPlayers], attack);
         sleep(1);
 
@@ -33,7 +35,7 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
             } else {
                 printf("Lucky! %s's attack was successful.(Threshold HP rule prohibits hp addition)\n", player[turn % numPlayers]);
             }
-        } 
+        } else {
             // Decrease health points of other players
             for (int i = 0; i < numPlayers; i++) {
                 if (i != turn % numPlayers) {
@@ -46,7 +48,7 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
                     }
                 }
             }
-        
+        }
 
         printf("Health Points:\n");
         for (int i = 0; i < numPlayers; i++) {
@@ -81,8 +83,18 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
         printf("Loading next turn .... \n");
         sleep(1.5);
         turn += 1;
+        turns++;
         printf("\n");
     }
+
+    printf("Maximum turns reached. The game ends in a draw.\n");
+
+    // Free dynamically allocated memory
+    for (int i = 0; i < numPlayers; i++) {
+        free(player[i]);
+    }
+    free(player);
+    free(healthPoints);
 }
 
 int main() {
