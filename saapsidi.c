@@ -7,33 +7,40 @@
 #define NUM_LADDERS 5
 #define DEFAULT_FINAL_SQUARE 100
 
-void displayBoard(int numPlayers, char player[][20], int position[]) {
+void displayBoard(int numPlayers, char player[][20], int position[])
+{
     printf("\nCurrent Board:\n");
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < numPlayers; i++)
+    {
         printf("%s: %d\t", player[i], position[i]);
     }
     printf("\n\n");
 }
 
-void playGame(int numPlayers, int finalSquare) {
+void playGame(int numPlayers, int finalSquare)
+{
     char player[numPlayers][20];
     int position[numPlayers];
+    int consecutiveSixCount[numPlayers];
 
     // Seed the random number generator with the current time
     srand((unsigned int)time(NULL));
 
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < numPlayers; i++)
+    {
         printf("Enter player %d's name: ", i + 1);
         scanf("%s", player[i]);
         position[i] = 0;
+        consecutiveSixCount[i] = 0;
     }
 
     // Define snakes and ladders
-    int snakes[NUM_SNAKES][2] = {{17, 7}, {54, 34}, {92, 78}, {95, 72}, {98, 79}};
+    int snakes[NUM_SNAKES][2] = {{17, 7}, {54, 34}, {92, 78}, {95, 72}, {99, 2}};
     int ladders[NUM_LADDERS][2] = {{3, 21}, {19, 42}, {25, 65}, {38, 89}, {60, 81}};
 
     int turn = 0;
-    while (1) {
+    while (1)
+    {
         printf("\n%s's turn:\n", player[turn % numPlayers]);
 
         int current = rand() % 6 + 1;
@@ -41,15 +48,19 @@ void playGame(int numPlayers, int finalSquare) {
         sleep(1);
 
         // Check for snakes and ladders
-        for (int i = 0; i < NUM_SNAKES; i++) {
-            if (position[turn % numPlayers] == snakes[i][0]) {
+        for (int i = 0; i < NUM_SNAKES; i++)
+        {
+            if (position[turn % numPlayers] == snakes[i][0])
+            {
                 printf("Oh no! Encountered a snake! Sliding down to %d.\n", snakes[i][1]);
-                position[turn % numPlayers] = snakes[i][1];
+                position[turn % numPlayers] = snakes[i][1]; // Corrected line
             }
         }
 
-        for (int i = 0; i < NUM_LADDERS; i++) {
-            if (position[turn % numPlayers] == ladders[i][0]) {
+        for (int i = 0; i < NUM_LADDERS; i++)
+        {
+            if (position[turn % numPlayers] == ladders[i][0])
+            {
                 printf("Yay! Found a ladder! Climbing up to %d.\n", ladders[i][1]);
                 position[turn % numPlayers] = ladders[i][1];
             }
@@ -59,7 +70,8 @@ void playGame(int numPlayers, int finalSquare) {
         position[turn % numPlayers] += current;
 
         // Check if the player reaches or passes the final square
-        if (position[turn % numPlayers] >= finalSquare) {
+        if (position[turn % numPlayers] >= finalSquare)
+        {
             printf("Congratulations! %s reached the final square! They are the winner!\n", player[turn % numPlayers]);
             displayBoard(numPlayers, player, position);
             return;
@@ -68,22 +80,46 @@ void playGame(int numPlayers, int finalSquare) {
         printf("%s's current position is now %d \n", player[turn % numPlayers], position[turn % numPlayers]);
 
         // Check for collisions with other players
-        for (int i = 0; i < numPlayers; i++) {
-            if (i != turn % numPlayers && position[i] == position[turn % numPlayers]) {
+        for (int i = 0; i < numPlayers; i++)
+        {
+            if (i != turn % numPlayers && position[i] == position[turn % numPlayers])
+            {
                 printf("Oh no! Collision with %s! %s eliminates %s, sending them back to square 1.\n", player[i], player[turn % numPlayers], player[i]);
                 position[i] = 1; // The latest player eliminates the previous one
             }
         }
 
+        // Check for consecutive sixes
+        if (current == 6)
+        {
+            consecutiveSixCount[turn % numPlayers]++;
+            if (consecutiveSixCount[turn % numPlayers] == 3)
+            {
+                printf("Oh no! %s rolled three consecutive 6s and gets a penalty of -6!\n", player[turn % numPlayers]);
+                position[turn % numPlayers] -= 12;
+                consecutiveSixCount[turn % numPlayers] = 0;
+            }
+            else
+            {
+                printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % numPlayers]);
+                continue; // Bonus chance for rolling a 6
+            }
+        }
+        else
+        {
+            consecutiveSixCount[turn % numPlayers] = 0;
+        }
+
         displayBoard(numPlayers, player, position);
 
-        printf("Loading next turn .... \n");
+        printf("%s is rolling now .... \n", player[turn % numPlayers]);
         sleep(1.5);
         turn += 1;
     }
 }
 
-int main() {
+int main()
+{
     int numPlayers;
 
     printf("Enter the number of players: ");
