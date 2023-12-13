@@ -35,7 +35,7 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
             } else {
                 printf("Lucky! %s's attack was successful.(Threshold HP rule prohibits hp addition)\n", player[turn % numPlayers]);
             }
-        } else {
+        } 
             // Decrease health points of other players
             for (int i = 0; i < numPlayers; i++) {
                 if (i != turn % numPlayers) {
@@ -48,7 +48,6 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
                     }
                 }
             }
-        }
 
         printf("Health Points:\n");
         for (int i = 0; i < numPlayers; i++) {
