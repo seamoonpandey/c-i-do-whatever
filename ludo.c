@@ -24,20 +24,20 @@ void playGame(int numPlayers, int top) {
         printf("%s got %d \n", player[turn % numPlayers], current);
         sleep(1);
 
+        finalscore[turn % numPlayers] += current;
         if (current == 6) {
             consecutiveSixCount[turn % numPlayers]++;
             printf("Consecutive six count for %s: %d\n", player[turn % numPlayers], consecutiveSixCount[turn % numPlayers]);
             
             if (consecutiveSixCount[turn % numPlayers] == 3) {
                 printf("Oh no! %s rolled three consecutive 6s and gets a penalty of -6!\n", player[turn % numPlayers]);
-                finalscore[turn % numPlayers] -= 6;
+                finalscore[turn % numPlayers] -= 12;
                 consecutiveSixCount[turn % numPlayers] = 0; 
             } else {
                 printf("Wow! %s rolled a 6 and gets another chance.\n", player[turn % numPlayers]);
             }
         } else {
             consecutiveSixCount[turn % numPlayers] = 0; 
-            finalscore[turn % numPlayers] += current;
             printf("%s's current score is now %d \n", player[turn % numPlayers], finalscore[turn % numPlayers]);
             printf("Loading next turn .... \n");
             sleep(1.5);
