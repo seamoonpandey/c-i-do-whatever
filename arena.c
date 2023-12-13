@@ -23,6 +23,9 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
 
     int turns = 0;
     while (turns < MAX_TURNS) {
+        if(healthPoints[turn % numPlayers] <=0){
+            continue;
+        }
         int attack = rand() % 7;
         printf("%s attacks with a damage of %d \n", player[turn % numPlayers], attack);
         sleep(1);
