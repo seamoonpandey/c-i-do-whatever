@@ -7,6 +7,9 @@ int main() {
     int turn = 0;
     char player[3][20];
     int finalscore[3] = {0};
+    int top;
+    printf("What shall be the final score\t");
+    scanf("%i",&top);
 
     // Seed the random number generator with the current time
     srand((unsigned int)time(NULL));
@@ -16,7 +19,7 @@ int main() {
         scanf("%s", player[i]);
     }
 
-    while (finalscore[0] < 100 && finalscore[1] < 100 && finalscore[2] < 100) {
+    while (finalscore[0] < top && finalscore[1] < top && finalscore[2] < top) {
         int current = rand() % 6 + 1;
         printf("%s got %d \n", player[turn % 3], current);
         sleep(1);
@@ -31,11 +34,13 @@ int main() {
             sleep(1.5);
             turn += 1;
         }
+
+        printf("\n \n");
     }
 
-    if (finalscore[0] >= 100) {
+    if (finalscore[0] >= top) {
         printf("%s is the winner", player[0]);
-    } else if (finalscore[1] >= 100) {
+    } else if (finalscore[1] >= top) {
         printf("%s is the winner", player[1]);
     } else {
         printf("%s is the winner", player[2]);
