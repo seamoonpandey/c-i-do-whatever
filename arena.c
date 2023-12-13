@@ -24,6 +24,7 @@ void playGame(int numPlayers, int initialHP, int lucky_hp_threshold) {
     int turns = 0;
     while (1) {
         if(healthPoints[turn % numPlayers] <=0){
+            turn++;
             continue;
         }
         int attack = rand() % 7;
