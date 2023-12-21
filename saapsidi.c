@@ -3,19 +3,46 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include "config.h"
 
 #define NUM_SNAKES 5
 #define NUM_LADDERS 5
 #define DEFAULT_FINAL_SQUARE 100
 
-// ANSI escape codes for text color
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
-#define ANSI_COLOR_BLUE    "\x1b[34m"
-#define ANSI_COLOR_MAGENTA "\x1b[35m"
-#define ANSI_COLOR_CYAN    "\x1b[36m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
+// Function to display the Hall of Fame
+void displayHallOfFame() {
+    printf("\n===== Hall of Fame =====\n");
+
+    // Open the Hall of Fame file
+    FILE *fameFile = fopen("hall_of_fame/saapsidi.txt", "r");
+    if (fameFile != NULL) {
+        char line[100];
+        
+        // Read and print each line from the file
+        while (fgets(line, sizeof(line), fameFile) != NULL) {
+            printf("%s", line);
+        }
+
+        fclose(fameFile);
+    } else {
+        printf("Unable to open the Hall of Fame file.\n");
+    }
+
+    printf("=========================\n");
+}
+
+// Function to update the Hall of Fame with the winner
+void updateHallOfFame(const char *winnerName, int finalPosition) {
+    // Open the Hall of Fame file for appending
+    FILE *fameFile = fopen("hall_of_fame/saapsidi.txt", "a");
+    if (fameFile != NULL) {
+        // Write the winner's information to the file
+        fprintf(fameFile, "Winner: %s, Final Position: %d\n", winnerName, finalPosition);
+        fclose(fameFile);
+    } else {
+        printf("Unable to open the Hall of Fame file for writing.\n");
+    }
+}
 
 void displayBoard(int numPlayers, char player[][20], int position[])
 {
@@ -44,9 +71,11 @@ void playGame(int numPlayers, int finalSquare)
         consecutiveSixCount[i] = 0;
     }
 
+    system(CLEAR_SCREEN);
+
     // Define snakes and ladders
     int snakes[NUM_SNAKES][2] = {{17, 7}, {54, 34}, {92, 78}, {95, 72}, {99, 2}};
-    int ladders[NUM_LADDERS][2] = {{3, 21}, {19, 42}, {25, 65}, {38, 89}, {60, 81}};
+    int ladders[NUM_LADDERS][2] = {{3, 21}, {19, 42}, {38, 89}, {60, 81}, {69,98}};
 
     int turn = 0;
     while (1)
@@ -55,7 +84,7 @@ void playGame(int numPlayers, int finalSquare)
 
         int current = rand() % 6 + 1;
         printf("Rolled a %d \n", current);
-        sleep(1000);
+        usleep(1500000);
 
         // Check for snakes and ladders
         for (int i = 0; i < NUM_SNAKES; i++)
@@ -84,6 +113,13 @@ void playGame(int numPlayers, int finalSquare)
         {
             printf("%sCongratulations! %s reached the final square! They are the winner!%s\n", ANSI_COLOR_GREEN, player[turn % numPlayers], ANSI_COLOR_RESET);
             displayBoard(numPlayers, player, position);
+            
+            // Update Hall of Fame
+            updateHallOfFame(player[turn % numPlayers], position[turn % numPlayers]);
+            
+            // Display Hall of Fame
+            displayHallOfFame();
+            
             return;
         }
 
@@ -97,6 +133,7 @@ void playGame(int numPlayers, int finalSquare)
                 printf("%sOh no! Collision with %s! %s eliminates %s, sending them back to square 1.%s\n", ANSI_COLOR_RED, player[i], player[turn % numPlayers], player[i], ANSI_COLOR_RESET);
                 position[i] = 1; 
                 printf("%s gets another chance",player[turn % numPlayers]);
+                continue;
             }
         }
 
@@ -124,7 +161,7 @@ void playGame(int numPlayers, int finalSquare)
         displayBoard(numPlayers, player, position);
 
         printf("%s%s is rolling now .... %s\n", ANSI_COLOR_BLUE, player[turn % numPlayers], ANSI_COLOR_RESET);
-        sleep(15000);
+        sleep(1);
         turn += 1;
     }
 }

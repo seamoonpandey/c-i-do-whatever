@@ -96,7 +96,7 @@ void playGame(int numPlayers, int initialHP, int luckyHpThreshold, int lukyHp) {
             winner.turnsToWin = turns;
 
             // Append the winner to the Hall of Fame file
-            FILE *fameFile = fopen("hall_of_fame.txt", "a");
+            FILE *fameFile = fopen("hall_of_fame/arena.txt", "a");
             if (fameFile != NULL) {
                 fprintf(fameFile, "Name: %s, HP: %d, Turns to Win: %d\n", winner.name, winner.finalHP, winner.turnsToWin);
                 fclose(fameFile);
