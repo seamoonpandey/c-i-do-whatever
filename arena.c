@@ -3,6 +3,14 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef _WIN32
+    // For Windows
+    #define CLEAR_SCREEN "cls"
+#else
+    // For Unix/Linux
+    #define CLEAR_SCREEN "clear"
+#endif
+
 // ANSI escape codes for text color
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -38,6 +46,8 @@ void playGame(int numPlayers, int initialHP, int luckyHpThreshold, int lukyHp) {
         scanf("%s", player[i]);
         healthPoints[i] = initialHP;
     }
+
+    system(CLEAR_SCREEN);
 
     int turns = 0;
     while (1) {
