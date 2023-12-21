@@ -23,7 +23,7 @@ void sleepMilliseconds(int milliseconds) {
     while ((clock() - start) * 1000 / CLOCKS_PER_SEC < milliseconds);
 }
 
-void playGame(int numPlayers, int initialHP, int luckyHpThreshold) {
+void playGame(int numPlayers, int initialHP, int luckyHpThreshold, int lukyHp) {
     int turn = 0;
     char **player = (char **)malloc(numPlayers * sizeof(char *));
     int *healthPoints = (int *)malloc(numPlayers * sizeof(int));
@@ -72,9 +72,8 @@ void playGame(int numPlayers, int initialHP, int luckyHpThreshold) {
 
         if (attack == 6) {
             if (healthPoints[turn % numPlayers] <= luckyHpThreshold) {
-                // If the player's health is below or equal to the lucky HP threshold, gain 5 HP
-                printf("%s%s's attack was successful, and they gain 5 HP.\n", ANSI_COLOR_GREEN, player[turn % numPlayers]);
-                healthPoints[turn % numPlayers] += 5;
+                printf("%s%s's attack was successful, and they gain %d HP.\n", ANSI_COLOR_GREEN, player[turn % numPlayers], lukyHp);
+                healthPoints[turn % numPlayers] += lukyHp;
             } else {
                 printf("%s%s got lucky. Gets another chance\n", ANSI_COLOR_GREEN, player[turn % numPlayers]);
                 continue;
@@ -138,21 +137,24 @@ void playGame(int numPlayers, int initialHP, int luckyHpThreshold) {
 }
 
 int main() {
-    int numPlayers, initialHP, luckyHpThreshold;
+    int numPlayers, initialHP, luckyHpThreshold, luckyHp;
 
     // Get input from the user
-    printf("Enter the number of players: ");
+    puts("Enter the number of players: ");
     scanf("%d", &numPlayers);
 
-    printf("Enter the initial health points for each player: ");
+    puts("Enter the initial health points for each player: ");
     scanf("%d", &initialHP);
 
     // Ask for the lucky HP threshold (same for all players)
-    printf("Enter the lucky HP threshold: ");
+    puts("Enter the lucky HP threshold: ");
     scanf("%d", &luckyHpThreshold);
 
+    puts("Enter the lucky HP: ");
+    scanf("%d", &luckyHp);
+
     // Start the game
-    playGame(numPlayers, initialHP, luckyHpThreshold);
+    playGame(numPlayers, initialHP, luckyHpThreshold, luckyHp);
 
     return 0;
 }
