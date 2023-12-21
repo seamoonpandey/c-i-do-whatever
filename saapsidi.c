@@ -14,7 +14,7 @@ void displayHallOfFame() {
     printf("\n===== Hall of Fame =====\n");
 
     // Open the Hall of Fame file
-    FILE *fameFile = fopen("hall_of_fame/saapsidi.txt", "r");
+    FILE *fameFile = fopen("hall_of_fame_saapsidi.txt", "r");
     if (fameFile != NULL) {
         char line[100];
         
@@ -34,7 +34,7 @@ void displayHallOfFame() {
 // Function to update the Hall of Fame with the winner
 void updateHallOfFame(const char *winnerName, int finalPosition) {
     // Open the Hall of Fame file for appending
-    FILE *fameFile = fopen("hall_of_fame/saapsidi.txt", "a");
+    FILE *fameFile = fopen("hall_of_fame_saapsidi.txt", "a");
     if (fameFile != NULL) {
         // Write the winner's information to the file
         fprintf(fameFile, "Winner: %s, Final Position: %d\n", winnerName, finalPosition);
