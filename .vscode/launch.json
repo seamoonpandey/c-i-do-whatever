@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/samar/Desktop/c-for-fun",
-      "program": "/home/samar/Desktop/c-for-fun/build/Debug/outDebug",
+      "cwd": "/home/hacked_moon/Desktop/programfiles/cfun",
+      "program": "/home/hacked_moon/Desktop/programfiles/cfun/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
